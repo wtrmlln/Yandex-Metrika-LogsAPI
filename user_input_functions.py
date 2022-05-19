@@ -1,9 +1,12 @@
-from datetime import datetime
+import metrika_token
 from data import sites_dict
+from datetime import datetime
+
+AUTO_MODE = True
 
 # Получить токен с пользовательского ввода
 def get_token():
-    return str(input('Введите токен аутентификации для Яндекс.Метрика'))
+    return str(input('Введите токен аутентификации для Яндекс.Метрика: '))
 
 # Получить список необходимых сайтов для выгрузки с пользовательского ввода
 def get_sites():
@@ -49,10 +52,27 @@ def get_dates():
 def get_target():
     while True:
         try:
-            target = str(input('Введите цель выгрузки (Просмотры/Визиты):')).lower().strip()
+            target = str(input('Введите цель выгрузки (Просмотры/Визиты): ')).lower().strip()
             if target == 'просмотры' or target == 'визиты':
                 return target
             else:
                 print('Некорректно введена цель, должна быть "Просмотры" или "Визиты"')
         except:
             pass
+
+# Выгружает только необходимые сайты
+if AUTO_MODE == False:
+    token = get_token()
+    required_sites = get_sites()
+# Выгружает все сайты из sites_dict
+elif AUTO_MODE == True: 
+    token = metrika_token.token
+    required_sites = list(sites_dict.keys())
+
+date1, date2 = get_dates()
+target = get_target()
+
+sites_list = []
+for key in sites_dict.keys():
+    if key in required_sites:
+        sites_list.append(key)

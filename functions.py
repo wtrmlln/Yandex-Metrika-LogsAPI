@@ -1,12 +1,14 @@
-from tapi_yandex_metrika import YandexMetrikaLogsapi
 from data import sites_dict, sites_goals_dict, visits_columns_dict, hits_columns_dict
-from __init__ import token, date1, date2, target
 
-import datetime
 import pandas as pd
 from functools import partial
+from datetime import datetime
+from tapi_yandex_metrika import YandexMetrikaLogsapi
+
+from user_input_functions import token, target, date1, date2
 
 def get_ym_data(site_id):
+    print(token)
     client = YandexMetrikaLogsapi(token=token, default_url_params={'counterId': site_id})
     
     visits_fields_ym = ",".join(list(visits_columns_dict.keys()))
@@ -81,3 +83,5 @@ def clearout_all_reports(site_id):
             request_id = report['request_id']
             new_result = client.clean(requestId=request_id).post()
     print(result)
+    
+
