@@ -1,4 +1,4 @@
-from token import token
+from metrika_token import token
 from data import sites_dict
 from functions import get_ym_data
 from user_input_functions import get_target, get_dates, get_sites, get_token
