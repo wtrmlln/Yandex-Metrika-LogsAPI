@@ -36,12 +36,12 @@ def get_dates():
             date1 = str(input('Введите первую дату для интервала выгрузки формата YYYY-MM-DD: ')).lower().strip()
             date2 = str(input('Введите вторую дату для интервала выгрузки формата YYYY-MM-DD: ')).lower().strip()
             
-            datetime.strptime(date1, '%Y-%m-%d')
-            datetime.strptime(date2, '%Y-%m-%d')
             if (datetime.strptime(date2, "%Y-%m-%d") - datetime.strptime(date1, "%Y-%m-%d")).days <= 0:
                 print('В интервал должен входить хотя бы один день.')
             elif (datetime.strptime(date2, "%Y-%m-%d") - datetime.strptime(date1, "%Y-%m-%d")).days >= 365:
                 print('Ширина интервала не должна превышать год.')
+            elif date1 == datetime.now().strftime("%Y-%m-%d") or date2 == datetime.now().strftime("%Y-%m-%d"):
+                print('Дата не должна быть равна сегодняшней.')
             else:
                 print('Интервал успешно выбран.')
                 return [date1, date2]

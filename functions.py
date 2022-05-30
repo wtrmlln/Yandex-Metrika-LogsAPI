@@ -35,9 +35,9 @@ def get_ym_data(site_id):
     df_ym = pd.DataFrame(data[1:], columns=data[0])
     df_ym = df_ym.rename(columns=lambda x: x.strip())
     
-    if target == 'visits':
+    if target == 'визиты':
         df_ym = df_ym.rename(columns = visits_columns_dict)
-    elif target == 'hits':
+    elif target == 'просмотры':
         df_ym = df_ym.rename(columns = hits_columns_dict)
 #Преобразовывает числовые идентификаторы в текст и скачивает таблицу в формате xlsx    
     

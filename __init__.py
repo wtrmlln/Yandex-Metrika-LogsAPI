@@ -11,3 +11,5 @@ if __name__ == '__main__':
     for site in results_list:
         for df, filename in site:
             df.to_csv(filename)
+    
+    x = 10
