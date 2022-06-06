@@ -1,3 +1,4 @@
+from secrets import token_urlsafe
 from data import sites_dict, sites_goals_dict, visits_columns_dict, hits_columns_dict
 
 import pandas as pd
@@ -26,9 +27,6 @@ def get_ym_data(site_id):
                 "source":"hits"}
     result = client.create().post(params=params)
     request_id = result["log_request"]["request_id"]
-
-    filename = str('YaMetrika ' + target + ' ' + sites_dict[site_id] + ' ' + datetime.now().strftime('%Y-%m-%d') + '.csv')
-    print(filename + ' подготовлен к скачиванию')
     part = client.download(requestId=request_id, partNumber=0).get()
     data = part.data
     data = [x.split('\t') for x in data.split('\n')[:-1]]
@@ -42,6 +40,7 @@ def get_ym_data(site_id):
 #Преобразовывает числовые идентификаторы в текст и скачивает таблицу в формате xlsx    
     
     df_ym['Идентификаторы достигнутых целей'] = df_ym['Идентификаторы достигнутых целей'].apply(partial(get_id_names, site_id=site_id))
+    filename = str('YaMetrika ' + target + ' ' + sites_dict[site_id] + ' ' + datetime.now().strftime('%Y-%m-%d') + '.csv')
     print(filename + ' успешно обработан в DataFrame')
     return [df_ym, filename]
 
@@ -67,12 +66,12 @@ def get_status_all_reports(site_id):
 
 # Очистить все подготовленные репорты.
 def clearout_all_reports(site_id):
-    client = YandexMetrikaLogsapi(token=token, default_url_params={'counterId': site_id})
+    client = YandexMetrikaLogsapi(access_token=token_urlsafe, default_url_params={'counterId': site_id})
     result = client.allinfo().get()
     for report in result['requests']:
         if report['status'] == 'processed':
             request_id = report['request_id']
             new_result = client.clean(requestId=request_id).post()
-    print(result)
+            print('Запрос по сайту ' + sites_dict[str(report['counter_id'])] + ' с интервалом ' + report['date1'] + ' - ' + report['date2'] + ' успешно очищен' )
     
 
