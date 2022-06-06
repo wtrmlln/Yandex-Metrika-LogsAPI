@@ -1,12 +1,28 @@
 from secrets import token_urlsafe
-from data import sites_dict, sites_goals_dict, visits_columns_dict, hits_columns_dict
+from data import sites_dict, visits_columns_dict, hits_columns_dict
 
 import pandas as pd
 from functools import partial
 from datetime import datetime
 from tapi_yandex_metrika import YandexMetrikaLogsapi
+from tapi_yandex_metrika import YandexMetrikaManagement
 
 from user_input_functions import token, target, date1, date2
+
+def get_goals_dict(site_id):
+    
+    client = YandexMetrikaManagement(access_token=token, default_url_params={'counterId': site_id})
+    goals_json = client.goals().get()
+    goals_dict = {}
+
+    for goal in goals_json.data['goals']:
+        # Если цель составная
+        if 'steps' in goal.keys():
+            for sub_goal in goal['steps']:
+                goals_dict[sub_goal['id']] = sub_goal['name']
+        goals_dict[goal['id']] = goal['name']
+    
+    return goals_dict
 
 def get_ym_data(site_id):
     client = YandexMetrikaLogsapi(access_token=token, default_url_params={'counterId': site_id}, wait_report=True)
@@ -38,14 +54,14 @@ def get_ym_data(site_id):
     elif target == 'просмотры':
         df_ym = df_ym.rename(columns = hits_columns_dict)
 #Преобразовывает числовые идентификаторы в текст и скачивает таблицу в формате xlsx    
-    
-    df_ym['Идентификаторы достигнутых целей'] = df_ym['Идентификаторы достигнутых целей'].apply(partial(get_id_names, site_id=site_id))
+    goals_dict = get_goals_dict(site_id)
+    df_ym['Идентификаторы достигнутых целей'] = df_ym['Идентификаторы достигнутых целей'].apply(partial(get_id_names, goals_dict=goals_dict))
     filename = str('YaMetrika ' + target + ' ' + sites_dict[site_id] + ' ' + datetime.now().strftime('%Y-%m-%d') + '.csv')
     print(filename + ' успешно обработан в DataFrame')
     return [df_ym, filename]
 
 # Переводит числовые идентификаторы (219152671) целей в текстовые (Клик по кнопке "Прямой эфир")
-def get_id_names(text, site_id):
+def get_id_names(text, goals_dict):
     new_text = ''
     text = text.replace('[', '')
     text = text.replace(']', '')
@@ -53,7 +69,7 @@ def get_id_names(text, site_id):
     if '' == id_array[0]:
         return None
     for id in id_array:
-        temptext = sites_goals_dict[site_id][id]
+        temptext = goals_dict[int(id)]
         if new_text == '':
             new_text = temptext
         else:
