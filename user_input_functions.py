@@ -2,7 +2,8 @@ import metrika_token
 from data import sites_dict
 from datetime import datetime
 
-AUTO_MODE = True
+def get_automode():
+    return str(input('Выгрузить все доступные сайты? (Да/Нет)'))
 
 # Получить токен с пользовательского ввода
 def get_token():
@@ -61,11 +62,13 @@ def get_target():
             pass
 
 # Выгружает только необходимые сайты
-if AUTO_MODE == False:
+
+AUTO_MODE = str.lower(get_automode()).replace(' ', '')
+if AUTO_MODE == 'нет':
     token = get_token()
     required_sites = get_sites()
 # Выгружает все сайты из sites_dict
-elif AUTO_MODE == True: 
+elif AUTO_MODE == 'да': 
     token = metrika_token.token
     required_sites = list(sites_dict.keys())
 
