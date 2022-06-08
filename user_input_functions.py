@@ -3,22 +3,18 @@ from data import sites_dict
 from datetime import datetime
 
 def get_automode():
-    return str(input('Выгрузить все доступные сайты? (Да/Нет)'))
-
-# Получить токен с пользовательского ввода
-def get_token():
-    return str(input('Введите токен аутентификации для Яндекс.Метрика: '))
+    return str(input('Выгрузить все доступные сайты? (Да/Нет): '))
 
 # Получить список необходимых сайтов для выгрузки с пользовательского ввода
 def get_sites():
-    print('Список доступных сайтов для выгрузки (наименование /// id сайта):')
+    print('Список доступных сайтов для выгрузки (наименование /// id сайта): ')
     for site_id, site_name in sites_dict.items():
         print(site_name + ' /// ' + site_id)  
     print()
     while True:
         try:
             results_list = []
-            sites_list = input('Введите через запятую наименования необходимых сайтов для выгрузки').strip().split(',')
+            sites_list = input('Введите через запятую наименования необходимых сайтов для выгрузки: ').strip().split(',')
             if len(sites_list) > 0:
                 for input_site_name in sites_list:
                     for site_id, site_name in sites_dict.items():
@@ -65,13 +61,12 @@ def get_target():
 
 AUTO_MODE = str.lower(get_automode()).replace(' ', '')
 if AUTO_MODE == 'нет':
-    token = get_token()
     required_sites = get_sites()
 # Выгружает все сайты из sites_dict
 elif AUTO_MODE == 'да': 
-    token = metrika_token.token
     required_sites = list(sites_dict.keys())
 
+token = metrika_token.token
 date1, date2 = get_dates()
 target = get_target()
 
