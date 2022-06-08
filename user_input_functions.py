@@ -9,7 +9,7 @@ def get_automode():
 def get_sites():
     print('Список доступных сайтов для выгрузки (наименование /// id сайта): ')
     for site_id, site_name in sites_dict.items():
-        print(site_name + ' /// ' + site_id)  
+        print(site_name.ljust(25) + ' /// ' + site_id)  
     print()
     while True:
         try:
