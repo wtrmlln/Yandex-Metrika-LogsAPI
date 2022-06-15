@@ -55,7 +55,7 @@ def get_ym_data(site_id):
         df_ym = df_ym.rename(columns = hits_columns_dict)
 #Преобразовывает числовые идентификаторы в текст и скачивает таблицу в формате xlsx    
     goals_dict = get_goals_dict(site_id)
-    df_ym['Идентификаторы достигнутых целей'] = df_ym['Идентификаторы достигнутых целей'].apply(partial(get_id_names, goals_dict=goals_dict))
+    df_ym['Цели'] = df_ym['Цели'].apply(partial(get_id_names, goals_dict=goals_dict))
     filename = str('YaMetrika ' + target + ' ' + sites_dict[site_id] + ' ' + datetime.now().strftime('%Y-%m-%d') + '.csv')
     print(filename + ' успешно обработан в DataFrame')
     return [df_ym, filename]
