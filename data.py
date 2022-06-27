@@ -1,6 +1,7 @@
 # Визиты - https://yandex.ru/dev/metrika/doc/api2/logs/fields/visits.html
 visits_columns_dict = {'ym:s:clientID': 'ID посетителя',
-                       'ym:s:visitID': 'Идентификатор визита', 
+                       'ym:s:visitID': 'Идентификатор визита',
+                       'ym:s:date': 'Дата визита',
                        'ym:s:startURL': 'Страница входа',
                        'ym:s:endURL': 'Страница выхода',
                        'ym:s:pageViews': 'Глубина просмотра',
