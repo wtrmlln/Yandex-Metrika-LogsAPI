@@ -1,76 +1,51 @@
-import metrika_token
 from data import sites_dict
 from datetime import datetime
-
-def get_automode():
-    return str(input('Выгрузить все доступные сайты? (Да/Нет): '))
+import tkinter as tk
 
 # Получить список необходимых сайтов для выгрузки с пользовательского ввода
-def get_sites():
-    print('Список доступных сайтов для выгрузки (наименование /// id сайта): ')
-    for site_id, site_name in sites_dict.items():
-        print(site_name.ljust(25) + ' /// ' + site_id)  
-    print()
+def get_sites(sites, output_window, userform):
     while True:
         try:
             results_list = []
-            sites_list = input('Введите через запятую наименования необходимых сайтов для выгрузки: ').strip().split(',')
+            sites_list = sites.split(',')
             if len(sites_list) > 0:
                 for input_site_name in sites_list:
-                    for site_id, site_name in sites_dict.items():
+                    for site_name, site_id in sites_dict.items():
                         if input_site_name.strip() == site_name:
                             results_list.append(site_id)
                 return results_list
             else:
-                print('Ввод не может быть пустым значением')
+                output_window.insert(tk.END, 'Ввод не может быть пустым значением' + '\n')
+                userform.mainloop()
         except:
-            pass
+            userform.mainloop()
 
 # Получить даты интервала для выгрузки с пользовательского ввода
-def get_dates():
+def get_dates(date1, date2, output_window, userform):
     while True:
         try:            
-            date1 = str(input('Введите первую дату для интервала выгрузки формата YYYY-MM-DD: ')).lower().strip()
-            date2 = str(input('Введите вторую дату для интервала выгрузки формата YYYY-MM-DD: ')).lower().strip()
-            
             if (datetime.strptime(date2, "%Y-%m-%d") - datetime.strptime(date1, "%Y-%m-%d")).days <= 0:
-                print('В интервал должен входить хотя бы один день.')
+                output_window.insert(tk.END, 'В интервал должен входить хотя бы один день.' + '\n')
             elif (datetime.strptime(date2, "%Y-%m-%d") - datetime.strptime(date1, "%Y-%m-%d")).days >= 365:
-                print('Ширина интервала не должна превышать год.')
+                output_window.insert(tk.END, 'Ширина интервала не должна превышать год.' + '\n')
             elif date1 == datetime.now().strftime("%Y-%m-%d") or date2 == datetime.now().strftime("%Y-%m-%d"):
-                print('Дата не должна быть равна сегодняшней.')
+                output_window.insert(tk.END, 'Дата не должна быть равна сегодняшней.' + '\n')
             else:
-                print('Интервал успешно выбран.')
+                output_window.insert(tk.END, 'Интервал успешно выбран.' + '\n')
                 return [date1, date2]
         except:
-            print("Некорректный формат даты, должен быть YYYY-MM-DD.")
-
+            output_window.insert(tk.END, 'Некорректный формат даты, должен быть YYYY-MM-DD.' + '\n')
+            userform.mainloop()
+    
 # Получить цель выгрузки (Просмотры/Визиты) с пользовательского ввода
-def get_target():
+def get_target(target, output_window, userform):
     while True:
         try:
-            target = str(input('Введите цель выгрузки (Просмотры/Визиты): ')).lower().strip()
+            target = target.lower().strip()
             if target == 'просмотры' or target == 'визиты':
                 return target
             else:
-                print('Некорректно введена цель, должна быть "Просмотры" или "Визиты"')
+                output_window.insert(tk.END, 'Некорректно введена цель, должна быть "Просмотры" или "Визиты"' + '\n')
+                userform.mainloop()
         except:
-            pass
-
-# Выгружает только необходимые сайты
-
-AUTO_MODE = str.lower(get_automode()).replace(' ', '')
-if AUTO_MODE == 'нет':
-    required_sites = get_sites()
-# Выгружает все сайты из sites_dict
-elif AUTO_MODE == 'да': 
-    required_sites = list(sites_dict.keys())
-
-token = metrika_token.token
-date1, date2 = get_dates()
-target = get_target()
-
-sites_list = []
-for key in sites_dict.keys():
-    if key in required_sites:
-        sites_list.append(key)
+            userform.mainloop()
