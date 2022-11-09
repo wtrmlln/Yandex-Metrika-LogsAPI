@@ -5,7 +5,7 @@ import tkinter as tk
 from functools import partial
 from datetime import datetime
 from tapi_yandex_metrika import YandexMetrikaLogsapi, YandexMetrikaManagement
-from metrika_token import token
+#from metrika_token import token
 from multiprocessing.dummy import Pool as ThreadPool
 
 def get_goals_dict(site_id):
